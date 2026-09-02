@@ -1,0 +1,14 @@
+[settings]
+go.set_gobin = false
+minimum_release_age_excludes = ["amp"]
+
+[tools]
+amp = { version = "latest", allow_builds = ["@ampcode/cli"] }
+actionlint = "latest"
+gh = "latest"
+go = "1.27.0"
+golangci-lint = "latest"
+shellcheck = "latest"
+shfmt = "latest"
+yamlfmt = "latest"
+zizmor = "latest"

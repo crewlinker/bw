@@ -20,13 +20,15 @@ profile.cov
 # Dependency directories (remove the comment below to include it)
 # vendor/
 
-# Go workspace file
-go.work
-go.work.sum
-
 # env file
 .env
+
+# macOS
+.DS_Store
 
 # Editor/IDE
 # .idea/
 # .vscode/
+
+# Local developer overrides (mise reads it after mise.toml)
+mise.local.toml
