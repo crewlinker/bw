@@ -1,0 +1,44 @@
+# GoReleaser configuration. Validated by `mise run check:release`, exercised
+# locally by `mise run release:snapshot`, and run in CI by `mise run
+# release:publish` from .github/workflows/release.yml.
+version: 2
+project_name: bw
+builds:
+  - id: bwrp
+    main: ./cmd/bwrp
+    binary: bwrp
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w -X main.version={{ .Version }} -X main.commit={{ .Commit }} -X main.date={{ .CommitDate }}
+    mod_timestamp: "{{ .CommitTimestamp }}"
+# One archive per OS/arch (default name bw_<version>_<os>_<arch>) so mise's
+# `github:` backend can select the asset for a platform without extra options.
+archives:
+  - formats:
+      - tar.gz
+    format_overrides:
+      - goos: windows
+        formats:
+          - zip
+    files:
+      - none*
+checksum:
+  name_template: checksums.txt
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^chore:"
+      - "^ci:"
+      - "^docs:"
+      - "^test:"
