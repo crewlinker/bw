@@ -32,3 +32,6 @@ profile.cov
 
 # Local developer overrides (mise reads it after mise.toml)
 mise.local.toml
+
+# GoReleaser output
+dist/
