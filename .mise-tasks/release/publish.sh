@@ -21,18 +21,19 @@ if [[ -n "$(git status --porcelain)" ]]; then
 	exit 1
 fi
 
-git fetch --quiet --tags origin
-
+# The checkout has no git credentials (persist-credentials: false), so no git
+# fetch/push here: the workflow checks out with fetch-depth 0, which includes
+# all tags, and everything remote goes through the GitHub API with gh.
 sha=$(git rev-parse HEAD)
 tag=$(mise run --quiet release:next-version --bump "${usage_bump:-patch}")
 repo=$(gh repo view --json nameWithOwner --jq .nameWithOwner)
 
 echo "Releasing ${repo} ${tag} from ${sha}"
 
-# Create the tag on GitHub rather than pushing it, so no git credentials are
-# needed in the checkout. Tags created with GITHUB_TOKEN do not trigger other
-# workflows, which is why tagging and releasing happen in this one task.
+# Create the tag on GitHub first, then mirror it locally for GoReleaser. Tags
+# created with GITHUB_TOKEN do not trigger other workflows, which is why tagging
+# and releasing happen in this one task.
 gh api --silent "repos/${repo}/git/refs" -f ref="refs/tags/${tag}" -f sha="$sha"
-git fetch --quiet origin "refs/tags/${tag}:refs/tags/${tag}"
+git tag "$tag" "$sha"
 
 goreleaser release --clean
