@@ -16,7 +16,13 @@ mise install   # installs the latest release; `bwrp` is now on PATH
 mise up        # later: update to the newest release
 ```
 
-`minimum_release_age = "0s"` opts this tool out of mise's default 24-hour quarantine of new releases, so `mise up` picks up a release as soon as it is published. Drop it if you prefer the delay.
+`minimum_release_age = "0s"` opts this tool out of mise's default 24-hour quarantine of new releases. Drop it if you prefer the delay.
+
+mise caches the list of remote versions for an hour, so `mise up` may not see a release published minutes ago. To update to a release that was just merged, bypass the cache:
+
+```sh
+MISE_FETCH_REMOTE_VERSIONS_CACHE=0s mise up
+```
 
 This repository is private, so mise needs a GitHub token that can read it. mise uses `GITHUB_TOKEN` or `GH_TOKEN` when set, or the token from `mise token github`.
 
